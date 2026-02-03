@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>ثبت بیمه‌نامه</title>
+</head>
+<body>
+
+<h2>ثبت اطلاعات بیمه‌نامه</h2>
+
+<input id="fullName" placeholder="نام و نام خانوادگی"><br><br>
+<input id="mobile" placeholder="شماره موبایل"><br><br>
+<input id="shamsiDate" placeholder="1403/12/25"><br><br>
+
+<button onclick="submitForm()">ثبت</button>
+
+<script>
+function submitForm() {
+  fetch('https://script.google.com/macros/s/AKfycbyqiGcgPaOl4CLtXjI4BvGFYQ32nRXjDfWXQnnj17LAIM9-d7uwxCKUR1buYtxsdWpd/exec', {
+    method: 'POST',
+    body: JSON.stringify({
+      fullName: document.getElementById('fullName').value,
+      mobile: document.getElementById('mobile').value,
+      shamsiDate: document.getElementById('shamsiDate').value
+    })
+  }).then(() => {
+    alert('ثبت شد');
+  });
+}
+</script>
+
+</body>
+</html>
