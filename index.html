@@ -1,33 +1,130 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>ثبت بیمه‌نامه</title>
+  <meta charset="UTF-8" />
+  <title>ثبت تاریخ انقضای بیمه</title>
+
+  <style>
+    body {
+      font-family: Vazirmatn, Tahoma, sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 420px;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #1976d2;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    .success, .error {
+      margin-top: 16px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .success { color: green; }
+    .error { color: red; }
+  </style>
 </head>
+
 <body>
+  <div class="card">
+    <h2>ثبت تاریخ انقضای بیمه</h2>
 
-<h2>ثبت اطلاعات بیمه‌نامه</h2>
+    <label>نام و نام خانوادگی</label>
+    <input type="text" id="fullName" placeholder="مثلاً علی رضایی" />
 
-<input id="fullName" placeholder="نام و نام خانوادگی"><br><br>
-<input id="mobile" placeholder="شماره موبایل"><br><br>
-<input id="shamsiDate" placeholder="1403/12/25"><br><br>
+    <label>شماره موبایل</label>
+    <input type="tel" id="mobile" placeholder="09xxxxxxxxx" />
 
-<button onclick="submitForm()">ثبت</button>
+    <label>تاریخ انقضا (شمسی)</label>
+    <input type="text" id="shamsiDate" placeholder="1404/11/15" />
 
-<script>
-function submitForm() {
-  fetch('https://script.google.com/macros/s/AKfycbyqiGcgPaOl4CLtXjI4BvGFYQ32nRXjDfWXQnnj17LAIM9-d7uwxCKUR1buYtxsdWpd/exec', {
-    method: 'POST',
-    body: JSON.stringify({
-      fullName: document.getElementById('fullName').value,
-      mobile: document.getElementById('mobile').value,
-      shamsiDate: document.getElementById('shamsiDate').value
-    })
-  }).then(() => {
-    alert('ثبت شد');
-  });
-}
-</script>
+    <button onclick="submitForm()">ثبت اطلاعات</button>
 
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
+
+    function submitForm() {
+      const fullName = document.getElementById("fullName").value.trim();
+      const mobile = document.getElementById("mobile").value.trim();
+      const shamsiDate = document.getElementById("shamsiDate").value.trim();
+      const result = document.getElementById("result");
+
+      if (!fullName || !mobile || !shamsiDate) {
+        result.innerHTML = '<div class="error">لطفاً همه فیلدها را کامل کنید</div>';
+        return;
+      }
+
+      const payload = {
+        fullName,
+        mobile,
+        shamsiDate
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbzl-D5bVY-Y1L3I926NEPz7pkMSUgg51GeNXYf1yldGDi8-883Ica4zPZQEMyKVDcgSew/exec', {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(() => {
+        result.innerHTML = '<div class="success">اطلاعات با موفقیت ثبت شد ✅</div>';
+        document.querySelector("button").disabled = true;
+      })
+      .catch(() => {
+        result.innerHTML = '<div class="error">خطا در ارسال اطلاعات ❌</div>';
+      });
+    }
+  </script>
 </body>
 </html>
