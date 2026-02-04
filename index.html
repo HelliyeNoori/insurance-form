@@ -111,22 +111,26 @@
         shamsiDate
       };
 
-      fetch('https://script.google.com/macros/s/AKfycbwCnctRBb1EtD3scftYbb9wQ-YAeaSd9KeUW35PA4_0Hg4iovvH9s72h57Q1YJ_ikz3/exec', {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => res.json())
-      .then(() => {
-        result.innerHTML = '<div class="success">اطلاعات با موفقیت ثبت شد ✅</div>';
-        document.querySelector("button").disabled = true;
-      })
-      .catch(() => {
-        result.innerHTML = '<div class="error">خطا در ارسال اطلاعات ❌</div>';
-      });
+     fetch('https://script.google.com/macros/s/AKfycbxqtxjOfp36sPUaaayctZHDMNMYLaAopbadv9DE2e56eADqkYgpwL3O-rt42PcBa4zj/exec', {
+  method: "POST",
+  body: JSON.stringify(payload),
+  headers: { "Content-Type": "application/json" }
+})
+.then(res => res.json())
+.then(json => {
+  if (json.success) {
+    result.innerHTML = '<div class="success">اطلاعات با موفقیت ثبت شد ✅</div>';
+  } else {
+    result.innerHTML = '<div class="error">خطا: ' + json.error + '</div>';
+  }
+})
+.catch(err => {
+  result.innerHTML = '<div class="error">خطا در ارسال اطلاعات ❌ ' + err + '</div>';
+});
     }
   </script>
 </body>
 </html>
+
 
 
