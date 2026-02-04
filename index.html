@@ -92,45 +92,44 @@
   </div>
 
   <script>
-    const WEB_APP_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybAEMqeqajsUqqYH0QYRf1NQEmth4FTwSaa_e3kNi3ZMAcZfBUAHw9lR9ui2iMNu59/exec";
 
-    function submitForm() {
+    async function submitForm() {
       const fullName = document.getElementById("fullName").value.trim();
       const mobile = document.getElementById("mobile").value.trim();
       const shamsiDate = document.getElementById("shamsiDate").value.trim();
       const result = document.getElementById("result");
 
+      result.innerHTML = "";
+      
       if (!fullName || !mobile || !shamsiDate) {
         result.innerHTML = '<div class="error">لطفاً همه فیلدها را کامل کنید</div>';
         return;
       }
 
-      const payload = {
-        fullName,
-        mobile,
-        shamsiDate
-      };
+      const payload = { fullName, mobile, shamsiDate };
 
-     fetch('https://script.google.com/macros/s/AKfycbxqtxjOfp36sPUaaayctZHDMNMYLaAopbadv9DE2e56eADqkYgpwL3O-rt42PcBa4zj/exec', {
-  method: "POST",
-  body: JSON.stringify(payload),
-  headers: { "Content-Type": "application/json" }
-})
-.then(res => res.json())
-.then(json => {
-  if (json.success) {
-    result.innerHTML = '<div class="success">اطلاعات با موفقیت ثبت شد ✅</div>';
-  } else {
-    result.innerHTML = '<div class="error">خطا: ' + json.error + '</div>';
-  }
-})
-.catch(err => {
-  result.innerHTML = '<div class="error">خطا در ارسال اطلاعات ❌ ' + err + '</div>';
-});
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const json = await response.json();
+
+        if (json.success) {
+          result.innerHTML = '<div class="success">✅ اطلاعات با موفقیت ثبت شد.</div>';
+        } else {
+          result.innerHTML = '<div class="error">❌ خطا در ثبت: ' + json.error + "</div>";
+        }
+
+      } catch (err) {
+        result.innerHTML = '<div class="error">❌ خطا در ارسال اطلاعات: ' + err.message + "</div>";
+      }
     }
   </script>
 </body>
 </html>
-
-
-
