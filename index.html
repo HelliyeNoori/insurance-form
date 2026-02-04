@@ -1,135 +1,154 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>ثبت تاریخ انقضای بیمه</title>
+<meta charset="UTF-8">
+<title>تعیین زمان بیمه نامه ثالث</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ریست اولیه */
+* { margin:0; padding:0; box-sizing:border-box; }
 
-  <style>
-    body {
-      font-family: Vazirmatn, Tahoma, sans-serif;
-      background: #f5f7fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+body {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background: url('https://images.unsplash.com/photo-1569058241351-8c31d5d1bb4b?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-    .card {
-      background: #ffffff;
-      width: 100%;
-      max-width: 420px;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
+/* نوشته ثابت بالای صفحه */
+.header-text {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1976d2; /* آبی */
+    text-shadow: none; /* بدون سایه */
+}
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
 
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 14px;
-      color: #555;
-    }
+/* کارت فرم */
+.card {
+    background: rgba(255,255,255,0.95);
+    width: 100%;
+    max-width: 440px;
+    padding: 32px 28px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+}
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
+h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #1976d2;
+    font-size: 20px;
+}
 
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #1976d2;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 15px;
-      cursor: pointer;
-    }
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #555;
+}
 
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+input:focus {
+    border-color: #1976d2;
+    outline: none;
+}
 
-    .success, .error {
-      margin-top: 16px;
-      font-size: 14px;
-      text-align: center;
-    }
+button {
+    width: 100%;
+    padding: 14px;
+    background: #1976d2;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+button:hover:not(:disabled) {
+    background: #115293;
+}
+button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
 
-    .success { color: green; }
-    .error { color: red; }
-  </style>
+.success, .error {
+    margin-top: 16px;
+    font-size: 14px;
+    text-align: center;
+}
+.success { color: green; }
+.error { color: red; }
+</style>
 </head>
-
 <body>
-  <div class="card">
-    <h2>ثبت تاریخ انقضای بیمه</h2>
 
-    <label>نام و نام خانوادگی</label>
-    <input type="text" id="fullName" placeholder="مثلاً علی رضایی" />
+<div class="header-text">نمایندگی بیمه ایران 20281</div>
 
-    <label>شماره موبایل</label>
-    <input type="tel" id="mobile" placeholder="09xxxxxxxxx" />
+<div class="card">
+  <h2>تعیین زمان بیمه نامه ثالث</h2>
+  
+  <label>نام و نام خانوادگی</label>
+  <input type="text" id="fullName" placeholder="مثلاً علی رضایی" />
+  
+  <label>شماره موبایل</label>
+  <input type="tel" id="mobile" placeholder="09xxxxxxxxx" />
+  
+  <label>تاریخ انقضا (شمسی)</label>
+  <input type="text" id="shamsiDate" placeholder="1404/11/15" />
+  
+  <button onclick="submitForm()">ثبت اطلاعات</button>
+  
+  <div id="result"></div>
+</div>
 
-    <label>تاریخ انقضا (شمسی)</label>
-    <input type="text" id="shamsiDate" placeholder="1404/11/15" />
+<script>
+function submitForm() {
+  const fullName = document.getElementById("fullName").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const shamsiDate = document.getElementById("shamsiDate").value.trim();
+  const result = document.getElementById("result");
 
-    <button onclick="submitForm()">ثبت اطلاعات</button>
+  if (!fullName || !mobile || !shamsiDate) {
+    result.innerHTML = '<div class="error">لطفاً همه فیلدها را کامل کنید</div>';
+    return;
+  }
 
-    <div id="result"></div>
-  </div>
+  google.script.run
+    .withSuccessHandler(() => {
+      result.innerHTML = '<div class="success">✅ اطلاعات با موفقیت ثبت شد.</div>';
+      document.getElementById("fullName").value = '';
+      document.getElementById("mobile").value = '';
+      document.getElementById("shamsiDate").value = '';
+    })
+    .withFailureHandler(err => {
+      result.innerHTML = '<div class="error">❌ خطا: ' + err + '</div>';
+    })
+    .doPostFromHtml({ fullName, mobile, shamsiDate });
+}
+</script>
 
-  <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybAEMqeqajsUqqYH0QYRf1NQEmth4FTwSaa_e3kNi3ZMAcZfBUAHw9lR9ui2iMNu59/exec";
-
-    async function submitForm() {
-      const fullName = document.getElementById("fullName").value.trim();
-      const mobile = document.getElementById("mobile").value.trim();
-      const shamsiDate = document.getElementById("shamsiDate").value.trim();
-      const result = document.getElementById("result");
-
-      result.innerHTML = "";
-      
-      if (!fullName || !mobile || !shamsiDate) {
-        result.innerHTML = '<div class="error">لطفاً همه فیلدها را کامل کنید</div>';
-        return;
-      }
-
-      const payload = { fullName, mobile, shamsiDate };
-
-      try {
-        const response = await fetch(WEB_APP_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload),
-        });
-
-        const json = await response.json();
-
-        if (json.success) {
-          result.innerHTML = '<div class="success">✅ اطلاعات با موفقیت ثبت شد.</div>';
-        } else {
-          result.innerHTML = '<div class="error">❌ خطا در ثبت: ' + json.error + "</div>";
-        }
-
-      } catch (err) {
-        result.innerHTML = '<div class="error">❌ خطا در ارسال اطلاعات: ' + err.message + "</div>";
-      }
-    }
-  </script>
 </body>
 </html>
